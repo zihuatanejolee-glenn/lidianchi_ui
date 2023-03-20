@@ -3,19 +3,61 @@
 		"^tn-(.*)": "@/tuniao-ui/components/tn-$1/tn-$1.vue"
 
 	},
-	"pages": [{
-		"path": "pages/index/index",
-		"style": {
-			"navigationBarTitleText": "uni-app"
+	"pages": [
+
+		{
+			"path": "pages/components/components",
+			"style": {
+				
+			}
+		},
+		{
+			"path": "pages/template/nvueSwiper",
+			"style": {
+				
+			}
+		},
+		{
+			"path": "pages/basic/basic",
+			"style": {
+				
+			}
 		}
-	}],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"app-plus": {
-			"background": "#efeff4"
+			"background": "#efeff4",
+			"titleNView": false
 		}
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [
+			{
+				"pagePath": "pages/components/components",
+				"iconPath": "static/img/photo.png",
+				"selectedIconPath": "static/img/photo_H.png",
+				"text": "相册"
+			}, {
+				"pagePath": "pages/template/nvueSwiper",
+				"iconPath": "static/img/video.png",
+				"selectedIconPath": "static/img/video_H.png",
+				"text": "视频"
+			},
+			{
+				"pagePath": "pages/basic/basic",
+				"iconPath": "static/img/my.png",
+				"selectedIconPath": "static/img/my_H.png",
+				"text": "我"
+			}
+		]
 	}
+
 }

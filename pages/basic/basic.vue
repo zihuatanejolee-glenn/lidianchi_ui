@@ -2,39 +2,10 @@
   <view class="basic tn-safe-area-inset-bottom">
 
     <view class="top-backgroup">
-      <image src='https://tnuiimage.tnkjapp.com/index_bg/basic_new.jpg' mode='widthFix' class='backgroud-image'></image>
+      <image :show-menu-by-longpress="true" src='https://www.99db.cn/lidianchi_ui/static/photo/mingpian_caoliao_qrcode.jpg' mode='widthFix' class='backgroud-image'></image>
     </view>
     
-    <block v-for="(item, index) in navList" :key="index">
-      <view class="nav_title--wrap tn-margin-bottom-sm">
-        <view class="nav_title tn-cool-bg-color-15">{{ item.title | titleFilter}}</view>
-      </view>
-      
-      <view class='nav-list'>
-        
-        <block v-for="(content_item, content_index) in item.list" :key="content_index">
-          <navigator
-            open-type="navigate"
-            hover-class='none'
-            :url="content_item.url"
-            class="nav-list-item tn-shadow-blur tn-cool-bg-image tn-flex tn-flex-direction-column tn-flex-col-center tn-flex-row-between"
-            :class="[
-              getRandomCoolBg(content_index)
-            ]"
-          >
-            <view class="icon">
-              <view :class="['tn-icon-' + content_item.icon]"></view>
-            </view>
-            <view class="nav-link">
-              <view class='title'>{{ content_item.title }}</view>
-            </view>
-          </navigator>
-        </block>
-        
-      </view>
-    </block>
     
-    <view class="tn-padding-bottom-xs"></view>
 
   </view>
 </template>

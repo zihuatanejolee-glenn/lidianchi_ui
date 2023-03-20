@@ -1,269 +1,182 @@
 <template>
-  <view class="template-photo">
-    <!-- 顶部自定义导航 -->
-    <tn-nav-bar fixed alpha customBack>
-      <view slot="back" class='tn-custom-nav-bar__back'
-        @click="goBack">
-        <text class='icon tn-icon-left'></text>
-        <text class='icon tn-icon-home-capsule-fill'></text>
-      </view>
-    </tn-nav-bar>
-    
-    <!-- 页面内容 -->
-    <view class="slideshow">
-      <view class="slideshow-image" style="background-image: url('https://s2.xptou.com/2023/03/07/6407587ccf9f3.jpg')"></view>
+	<view class="page-c">
 
-      <view class="slideshow-image" style="background-image: url('https://s2.xptou.com/2023/03/07/640758970b898.jpg')"></view>
-      <view class="slideshow-image" style="background-image: url('https://s2.xptou.com/2023/03/07/6407589680245.jpg')"></view>
-	  <view class="slideshow-image" style="background-image: url('https://s2.xptou.com/2023/03/07/64075933d4724.jpg')"></view>	
+		<!-- 顶部自定义导航 -->
+		<tn-nav-bar :isBack="false" :bottomShadow="false" backgroundColor="none">
+			<view class="custom-nav tn-flex tn-flex-col-center tn-flex-row-left" @click="tn('/minePages/message')">
+				<view class="custom-nav__back">
+					<text class="tn-text-bold tn-text-xl tn-color-black">每日推荐</text>
+				</view>
+			</view>
+		</tn-nav-bar>
+
+		<!-- 每日推荐 -->
+		<view class="swiper tn-margin-left tn-margin-right" style="height:100vh"
+			:style="{paddingTop: vuex_custom_bar_height + 'px'}">
+			<tn-stack-swiper :list="list" direction="vertical" height="100%" :switchRate="20" :scaleRate="0.05"
+				:translateRate="7.2"></tn-stack-swiper>
+		</view>
+		<!-- 效果二 -->
+		<!-- <view class="swiper tn-margin-left tn-margin-right" style="height:85vh" :style="{paddingTop: vuex_custom_bar_height + 'px'}">
+      <tn-stack-swiper ref="stackSwiper" :list="list" direction="vertical" height="100%" :switchRate="10" :scaleRate="0.20" :translateRate="6.5" :autoplay="true"></tn-stack-swiper>
+    </view> -->
+
+
+
+		<!-- <view class='tn-tabbar-height'></view> -->
+
 	</view>
-    
-  </view>
 </template>
 
 <script>
-  import template_page_mixin from '@/libs/mixin/template_page_mixin.js'
-  export default {
-    name: 'Components',
-    mixins: [template_page_mixin],
-    data(){
-      return {}
-    },
-	onLoad(options) {
-		console.log("coming componnets page-----")
-	  
-	},
-    methods: {
-      
-    }
-  }
+	export default {
+		name: 'PagesC',
+		data() {
+			return {
+				// swiper内容
+				list: [],
+				autoplay: false
+			}
+		},
+		onReady() {
+			this.$nextTick(() => {
+				this.initSwiperContainer()
+			})
+		},
+		onShow() {
+			this.autoplay = true
+		},
+		onHide() {
+			this.autoplay = false
+		},
+		onLoad() {
+			this.initPhotos()
+		},
+		methods: {
+			// 跳转
+			tn(e) {
+				uni.navigateTo({
+					url: e,
+				});
+			},
+			// 初始化轮播图容器
+			initSwiperContainer() {
+				// 获取底部tabbar信息
+				this._tGetRect('.tabbar').then((res) => {
+					console.log("底部tabbar高度为：" + res.height)
+					if (!res.height) {
+						setTimeout(() => {
+							this.initSwiperContainer()
+						}, 10)
+						return
+					}
+					// 获取系统信息
+					const systemInfo = uni.getSystemInfoSync()
+					this.swiperContainerHeight = systemInfo.safeArea.height - res.height - 10
+				})
+			},
+			initPhotos(){
+				uni.request({
+					url: 'https://www.99db.cn/outapi/li/photo',
+					method: 'POST',
+					data:{
+						info: ''
+					},
+					success: (res) => {
+						var photovos = res.data.data
+						// 2.这里把视频添加到视频列表
+						for (let i = 0; i < photovos.length; i++) {
+							this.list.push(photovos[i]);
+						}
+					}
+				})
+			}
+		}
+	}
 </script>
 
 <style lang="scss" scoped>
-  @import '@/static/css/templatePage/custom_nav_bar.scss';
-  .template-photo {
-    margin: 0;
-    width: 100%;
-    height: 100vh;
-    color: #fff;
-    overflow: hidden;
-  }
-  
+	.page-c {
+		max-height: 100vh;
+	}
 
-  
-  /* 相册 start*/
-  .slideshow {
-    top: 0;
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-  }
-  
-  .slideshow-image {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: no-repeat 50% 50%;
-    background-size: cover;
-    -webkit-animation-name: kenburns;
-            animation-name: kenburns;
-    -webkit-animation-timing-function: linear;
-            animation-timing-function: linear;
-    -webkit-animation-iteration-count: infinite;
-            animation-iteration-count: infinite;
-    -webkit-animation-duration: 16s;
-            animation-duration: 16s;
-    opacity: 1;
-    transform: scale(1.2);
-  }
-  .slideshow-image:nth-child(1) {
-    -webkit-animation-name: kenburns-1;
-            animation-name: kenburns-1;
-    z-index: 3;
-  }
-  .slideshow-image:nth-child(2) {
-    -webkit-animation-name: kenburns-2;
-            animation-name: kenburns-2;
-    z-index: 2;
-  }
-  .slideshow-image:nth-child(3) {
-    -webkit-animation-name: kenburns-3;
-            animation-name: kenburns-3;
-    z-index: 1;
-  }
-  .slideshow-image:nth-child(4) {
-    -webkit-animation-name: kenburns-4;
-            animation-name: kenburns-4;
-    z-index: 0;
-  }
-  
-  @-webkit-keyframes kenburns-1 {
-    0% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    1.5625% {
-      opacity: 1;
-    }
-    23.4375% {
-      opacity: 1;
-    }
-    26.5625% {
-      opacity: 0;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.2);
-    }
-    98.4375% {
-      opacity: 0;
-      transform: scale(1.2117647059);
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  
-  @keyframes kenburns-1 {
-    0% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    1.5625% {
-      opacity: 1;
-    }
-    23.4375% {
-      opacity: 1;
-    }
-    26.5625% {
-      opacity: 0;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.2);
-    }
-    98.4375% {
-      opacity: 0;
-      transform: scale(1.2117647059);
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  @-webkit-keyframes kenburns-2 {
-    23.4375% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    26.5625% {
-      opacity: 1;
-    }
-    48.4375% {
-      opacity: 1;
-    }
-    51.5625% {
-      opacity: 0;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.2);
-    }
-  }
-  @keyframes kenburns-2 {
-    23.4375% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    26.5625% {
-      opacity: 1;
-    }
-    48.4375% {
-      opacity: 1;
-    }
-    51.5625% {
-      opacity: 0;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.2);
-    }
-  }
-  @-webkit-keyframes kenburns-3 {
-    48.4375% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    51.5625% {
-      opacity: 1;
-    }
-    73.4375% {
-      opacity: 1;
-    }
-    76.5625% {
-      opacity: 0;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.2);
-    }
-  }
-  @keyframes kenburns-3 {
-    48.4375% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    51.5625% {
-      opacity: 1;
-    }
-    73.4375% {
-      opacity: 1;
-    }
-    76.5625% {
-      opacity: 0;
-      transform: scale(1);
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1.2);
-    }
-  }
-  @-webkit-keyframes kenburns-4 {
-    73.4375% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    76.5625% {
-      opacity: 1;
-    }
-    98.4375% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1);
-    }
-  }
-  @keyframes kenburns-4 {
-    73.4375% {
-      opacity: 1;
-      transform: scale(1.2);
-    }
-    76.5625% {
-      opacity: 1;
-    }
-    98.4375% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-      transform: scale(1);
-    }
-  }
-    /* 相册 end*/
+	/* 自定义导航栏内容 start */
+	.custom-nav {
+		height: 100%;
+
+		&__back {
+			margin: auto 30rpx;
+			font-size: 40rpx;
+			margin-right: 10rpx;
+			flex-basis: 5%;
+			width: 100rpx;
+			position: absolute;
+		}
+	}
+
+	/* 自定义导航栏内容 end */
+
+	/* 底部安全边距 start*/
+	.tn-tabbar-height {
+		min-height: 20rpx;
+		height: calc(40rpx + env(safe-area-inset-bottom) / 2);
+		height: calc(40rpx + constant(safe-area-inset-bottom));
+	}
+
+	/* 轮播图 start */
+	.swiper {
+		border-radius: 10rpx;
+		overflow: hidden;
+	}
+
+	/* 轮播图 end */
+
+	/* 底部固定按钮*/
+	.tn-footerfixed {
+		position: fixed;
+		width: 100%;
+		bottom: calc(130rpx + env(safe-area-inset-bottom));
+		z-index: 1024;
+	}
+
+	/* 图标容器4 start */
+	.tn-cool-color-icon4 {
+		// background-image: -webkit-linear-gradient(135deg, #ED1C24, #FECE12);
+		// background-image: linear-gradient(135deg, #ED1C24, #FECE12);
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+		text-fill-color: transparent;
+	}
+
+	.icon4 {
+		&__item {
+			width: 30%;
+			background-color: #FFFFFF;
+			border-radius: 10rpx;
+			padding: 30rpx;
+			margin: 20rpx 10rpx;
+			transform: scale(1);
+			transition: transform 0.3s linear;
+			transform-origin: center center;
+
+			&--icon {
+				width: 110rpx;
+				height: 110rpx;
+				font-size: 55rpx;
+				border-radius: 50%;
+				margin-bottom: 18rpx;
+				position: relative;
+				z-index: 1;
+				background-color: rgba(255, 255, 255, 0.8);
+				backdrop-filter: blur(20rpx);
+				-webkit-backdrop-filter: blur(20rpx);
+				box-shadow: 0rpx 0rpx 30rpx 0rpx rgba(0, 0, 0, 0.07);
+				// box-shadow: 0px 10px 30px rgba(70,23,129, 0.12),
+				//   0px -8px 40px rgba(255, 255, 255, 1),
+				//   inset 0px -10px 10px rgba(70,23,129, 0.05),
+				//   inset 0px 10px 20px rgba(255, 255, 255, 1);
+			}
+		}
+	}
 </style>

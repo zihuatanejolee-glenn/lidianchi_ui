@@ -23,7 +23,25 @@
 		 
 		4. 视频 id 切记是字符串类型 
 		 
-		 
+		 {
+		 			"_id": "61ea4d9c9329e700012c6a24",
+		 			"username": "阿水的哈",
+		 			"href": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-0455454d-b373-4768-aa39-dc1226fc1362/19820226-77e1-4c11-aa2b-df2765793fd5.jpeg",
+		 			"title": "西藏旅行",
+		 			"msg": "勇敢一点 西藏不远.#西藏 #旅行",
+		 			"state": "pause",
+		 			"like": 0,
+		 			"like_n": 0,
+		 			"sms_n": 4,
+		 			"src": "https://mp-bdb24c6d-8c19-4f80-8e7e-c9c9f037f131.cdn.bspapp.com/cloudstorage/45f664e7-f746-4012-9049-502e3766a05f.mp4",
+		 			"playNumber": 0,
+		 			"pinlun": [],
+		 			"playIng": false,
+		 			"isShowimage": false,
+		 			"isShowProgressBarTime": false,
+		 			"isplay": true,
+		 			"userID": "abcdefghijklmn12345"
+		 		},
 		 
 		 
 		 
@@ -47,7 +65,7 @@
 						 -->
 						<video
 						v-if="isShow"
-						:id="list._id+''+index"
+						:id="list.id+''+index"
 						:loop="true"
 						:muted="list.isplay"
 						:controls="false"
@@ -61,18 +79,18 @@
 						@ended="ended"
 						@click="tapVideoHover(list.state,$event)"
 						:style="'width: '+ windowWidth +'px; height: '+ windowHeight +'px; background-color: #000000; z-index: -1;'"
-						:poster="list.src+'?x-oss-process=video/snapshot,t_100,f_jpg'"
+						:poster="list.src"
 						></video>
 						<!-- 
 						1.这里是封面（方案二）：这里的封面可以自定义。
 						2.也在代码中做了批注，两种方案可以共存，不会相互影响。
 						-->
-						<image
+						<!-- <image
 						v-if="!list.playIng"
 						:src="list.src+'?x-oss-process=video/snapshot,t_100,f_jpg'"
 						:style="'width: '+ windowWidth +'px; height: '+ windowHeight +'px; position: absolute;'"
 						mode="aspectFit"
-						></image>
+						></image> -->
 					</view>
 					<!-- 播放状态：pause 的时候就会暂停 -->
 					<view class="videoHover" @click="tapVideoHover(list.state,$event)" :style="'width: '+ windowWidth +'px; height: '+ windowHeight +'px;'">
@@ -80,7 +98,7 @@
 					</view>
 					<view class="userInfo">
 						<!-- 1.头像 -->
-						<image @click="tozuozhe" class="userAvatar" :src="list.href" mode="aspectFill"></image>
+						<image  class="userAvatar" :src="list.href"  mode="aspectFill"></image>
 						<!-- 2.点赞 -->
 						<view @click="cLike(list.like);" style="opacity: 0.9; margin-top: 17px;">
 							<image v-if="list.like" src="@/static/img/index/xin.png" style="width: 40px; height: 40px; position: absolute; right: 6px;"></image>
@@ -122,7 +140,7 @@
 						 -->
 						<video
 						v-if="isShow"
-						:id="list._id+''+index"
+						:id="list.id+''+index"
 						:loop="true"
 						:muted="list.isplay"
 						:controls="false"
@@ -155,7 +173,7 @@
 					</view>
 					<view class="userInfo">
 						<!-- 1.头像 -->
-						<image @click="tozuozhe" class="userAvatar" :src="list.href" mode="aspectFill"></image>
+						<image  class="userAvatar" :src="list.href"  mode="aspectFill"></image>
 						<!-- 2.点赞 -->
 						<view @click="cLike(list.like);" style="opacity: 0.9; margin-top: 17px;">
 							<image v-if="list.like" src="@/static/img/index/xin.png" style="width: 40px; height: 40px; position: absolute; right: 6px;"></image>
@@ -175,7 +193,7 @@
 						<view @click="dealVoice" style="margin-top: 17px;">
 							<view style="width: 48px; height: 48px; border-radius: 50px; position: absolute; right: 2.5px;">
 								<image :style="'width: 48px; height: 48px; border-radius: 50px; transform: rotate('+ rotates +'deg);'" src="@/static/img/index/bfq.png" mode="aspectFill"></image>
-								<image v-if="showPlay" :style="'width: 30px; height: 30px; margin-top: 9px; margin-left: 9px; position: absolute; border-radius: 50px; transform: rotate('+ rotates +'deg);'" :src="list.href" mode="aspectFill"></image>
+								<image v-if="showPlay" :style="'width: 30px; height: 30px; margin-top: 9px; margin-left: 9px; position: absolute; border-radius: 50px; transform: rotate('+ rotates +'deg);'"  mode="aspectFill"></image>
 							</view>
 						</view>
 					</view>
@@ -247,9 +265,9 @@
 				this.dataList[old_k].playIng = false//如果视频暂停，就加载封面
 				this.dataList[old_k].isplay = true
 				this.dataList[old_k].state = 'pause'
-				console.log('预留第' + (old_k + 1) + '个视频：' + this.dataList[old_k]._id+''+old_k)
+				console.log('预留第' + (old_k + 1) + '个视频：' + this.dataList[old_k].id+''+old_k)
 				// 2.0版本已经去掉了下面这一句，视频不用暂停，只需要把声音禁止就行
-				uni.createVideoContext(this.dataList[old_k]._id + '' + old_k,this).stop()//如果视频暂停，那么旧视频停止，这里的this.dataList[old_k]._id + '' + old_k，后面加 old_k 是为了每一个视频的 id 值不同，这样就可以大程度的避免串音问题
+				uni.createVideoContext(this.dataList[old_k].id + '' + old_k,this).stop()//如果视频暂停，那么旧视频停止，这里的this.dataList[old_k].id + '' + old_k，后面加 old_k 是为了每一个视频的 id 值不同，这样就可以大程度的避免串音问题
 				console.log('已经暂停 --> 第' + (old_k + 1) + '个视频～')//提示
 				this.dataList[k].state = 'play'
 				this.isShow = true
@@ -268,10 +286,10 @@
 				},250)
 				if(this.mptime < 0.2){
 					this.changeTimeout = setTimeout(()=>{
-						uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).play()
+						uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).play()
 					},1400)
 				} else {
-					uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).play()
+					uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).play()
 				}
 				// #endif
 				// #ifdef H5
@@ -282,8 +300,8 @@
 						if (typeof WeixinJSBridge == "undefined") {
 							setTimeout(()=>{
 								audo.play()
-								uni.createVideoContext(this.dataList[k]._id+''+k,this).seek(0)
-								uni.createVideoContext(this.dataList[k]._id+''+k,this).play()
+								uni.createVideoContext(this.dataList[k].id+''+k,this).seek(0)
+								uni.createVideoContext(this.dataList[k].id+''+k,this).play()
 								setTimeout(()=>{
 									this.dataList[k].playIng = true
 								},650)
@@ -292,8 +310,8 @@
 							WeixinJSBridge.invoke('getNetworkType', {}, e => {
 								setTimeout(()=>{
 									audo.play()
-									uni.createVideoContext(this.dataList[k]._id+''+k,this).seek(0)
-									uni.createVideoContext(this.dataList[k]._id+''+k,this).play()
+									uni.createVideoContext(this.dataList[k].id+''+k,this).seek(0)
+									uni.createVideoContext(this.dataList[k].id+''+k,this).play()
 									setTimeout(()=>{
 										this.dataList[k].playIng = true
 									},850)
@@ -304,21 +322,20 @@
 				} else {
 					audo.pause()
 					this.dataList[k].state = 'pause'
-					uni.createVideoContext(this.dataList[k]._id+''+k,this).seek(0)
-					uni.createVideoContext(this.dataList[k]._id+''+k,this).pause()
+					uni.createVideoContext(this.dataList[k].id+''+k,this).seek(0)
+					uni.createVideoContext(this.dataList[k].id+''+k,this).pause()
 				}
 				// #endif
 				var p = k+1;
-				console.log('预加载第' + (p + 1) + '个视频：' + this.dataList[p]._id+''+p)
+				console.log('预加载第' + (p + 1) + '个视频：' + this.dataList[p].id+''+p)
 			}
 		},
 		onLoad() {
-			console.log("coming nvueSwip page-----")
 			this.platform = uni.getSystemInfoSync().platform
 			this.model = uni.getSystemInfoSync().model
 			var model = this.model
 			if(this.platform == 'ios' && (model !== 'iPhone6' || model !== 'iPhone6s' || model !== 'iPhone7' || model !== 'iPhone8')){
-				this.deleteHeight = 10//有 tabbar的 修改这里可以改变视频高度
+				this.deleteHeight = 0//有 tabbar的 修改这里可以改变视频高度
 			}
 			this.windowWidth = uni.getSystemInfoSync().windowWidth
 			this.windowHeight = uni.getSystemInfoSync().windowHeight
@@ -334,12 +351,12 @@
 			if(this.dataList.length !== 0){
 				// #ifdef MP
 				this.dataList[this.k].state = 'play';
-				uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).play()
+				uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).play()
 				// #endif
 				// #ifdef H5
 				if(this.isClick){
 					this.dataList[this.k].state = 'play';
-					uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).play()
+					uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).play()
 					audo.play()
 				}
 				// #endif
@@ -348,12 +365,12 @@
 		onHide(){
 			// #ifdef MP
 			this.dataList[this.k].state = 'pause';
-			uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).pause()
+			uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).pause()
 			// #endif
 			// #ifdef H5
 			if(this.isClick){
 				this.dataList[this.k].state = 'pause';
-				uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).pause()
+				uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).pause()
 				audo.pause()
 			}
 			// #endif
@@ -367,10 +384,10 @@
 				this.mpstartTime = (new Date()/1000);
 			},
 			dealVoice(){
-				uni.showToast({
-					title: '处理声音',
-					icon: 'none'
-				})
+				// uni.showToast({
+				// 	title: '处理声音',
+				// 	icon: 'none'
+				// })
 			},
 			clearToTime(){
 				//清理定时器
@@ -415,7 +432,7 @@
 				if(this.dataList[this.k].state == 'continue'){
 					this.isClick = true;
 					this.dataList[this.k].playIng = true
-					uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).play();//暂停以后继续播放
+					uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).play();//暂停以后继续播放
 					// #ifdef MP
 					this.dataList[this.k].isplay = false
 					// #endif
@@ -424,7 +441,7 @@
 					// #endif
 				}
 				if(this.dataList[this.k].state == 'pause'){
-					uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).pause();//暂停以后继续播放
+					uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).pause();//暂停以后继续播放
 					// #ifdef MP
 					this.dataList[this.k].isplay = true
 					// #endif
@@ -445,10 +462,10 @@
 			//每一组结束时新的请求
 			GET(){
 				uni.request({
-					url: 'https://bdb24c6d-8c19-4f80-8e7e-c9c9f037f131.bspapp.com/video',
+					url: 'https://www.99db.cn/outapi/li/video',
 					method: 'POST',
 					data:{
-						info: 'get_video'
+						info: ''
 					},
 					success: (res) => {
 						var msg = res.data.data
@@ -463,10 +480,10 @@
 				// 1.这里引入后端请求数据
 				// var msg = userList
 				uni.request({
-					url: 'https://bdb24c6d-8c19-4f80-8e7e-c9c9f037f131.bspapp.com/video',
+					url: 'https://www.99db.cn/outapi/li/video',
 					method: 'POST',
 					data:{
-						info: 'get_video'
+						info: ''
 					},
 					success: (res) => {
 						this.isShow = false;
@@ -489,23 +506,23 @@
 							this.dataList[this.k].playIng = true
 							setTimeout(()=>{
 								// #ifdef H5
-								uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).seek(0)
-								uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).pause()
+								uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).seek(0)
+								uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).pause()
 								this.dataList[this.k].state = 'pause';
 								audo.src = this.dataList[this.k].src;
 								// #endif
 								// #ifdef MP
-								uni.createVideoContext(this.dataList[this.k]._id+''+this.k,this).play()
+								uni.createVideoContext(this.dataList[this.k].id+''+this.k,this).play()
 								// #endif
 							},500)
 						},200)
-						this.videoID = this.dataList[this.k]._id
+						this.videoID = this.dataList[this.k].id
 					}
 				})
 			},
 			share(){
 				uni.showToast({
-					title: '分享',
+					title: '功能后续开放...',
 					icon: 'none'
 				})
 			},
@@ -523,13 +540,13 @@
 				（4）打开评论
 				*/ 
 				uni.showToast({
-					title: '加载中...',
+					title: '功能后续开放...',
 					icon: 'none',
 					position: 'bottom',
 					duration: 300
 				})
-				uni.setStorageSync("videoID",this.dataList[index]._id);
-				this.videoID = this.dataList[index]._id;
+				uni.setStorageSync("videoID",this.dataList[index].id);
+				this.videoID = this.dataList[index].id;
 				this.$refs.pinglun.open('bottom')
 			},
 			cLike(sss){
